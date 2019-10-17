@@ -50,10 +50,15 @@ public class ShowProfile extends EasyGraphics {
 
 		int bredde = 1;
 		int mellomrom = 2;
+		double elevation = 0;
 		setColor(0,0,255);
 		
 		for (int i = 0; i < gpspoints.length; i++) {
-			fillRectangle(i + mellomrom * i + MARGIN, ybase - (int)gpspoints[i].getElevation(), bredde, (int)gpspoints[i].getElevation());
+			if (gpspoints[i].getElevation() > 0) {
+				elevation = gpspoints[i].getElevation();
+			}
+			
+			fillRectangle(i + mellomrom * i + MARGIN, ybase - (int)gpspoints[i].getElevation(), bredde, (int)elevation);
 		}
 		// TODO - SLUTT
 	}
