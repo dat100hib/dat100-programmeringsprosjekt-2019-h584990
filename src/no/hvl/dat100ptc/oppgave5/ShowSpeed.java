@@ -48,8 +48,27 @@ public class ShowSpeed extends EasyGraphics {
 				
 		// TODO - START
 		
-		throw new UnsupportedOperationException(TODO.method());
-	
+		int bredde = 1;
+		int mellomrom = 1;
+		int xstopp = 2 * N + MARGIN;
+		double speed = 0;
+		
+		// Finner gjennomsnittlig fart
+		for (int i = 0; i < N; i++) {
+			speed += GPSUtils.speed(gpspoints[i], gpspoints[i+1]);
+		}
+		speed = speed / N;
+		
+		for (int i = 0; i < N; i++) {
+			setColor(0,0,255);
+			fillRectangle(i + mellomrom * i + MARGIN, ybase - (int)GPSUtils.speed(gpspoints[i], gpspoints[i+1]), bredde, (int)GPSUtils.speed(gpspoints[i], gpspoints[i+1]));
+		}
+		
+		
+		setColor(0,255,0);
+		drawLine(MARGIN, ybase - (int)speed, xstopp, ybase - (int)speed);
+		
+		
 		// TODO - SLUTT
 	}
 }

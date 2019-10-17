@@ -11,8 +11,8 @@ import no.hvl.dat100ptc.oppgave4.GPSComputer;
 public class ShowRoute extends EasyGraphics {
 
 	private static int MARGIN = 50;
-	private static int MAPXSIZE = 800;
-	private static int MAPYSIZE = 800;
+	private static int MAPXSIZE = 700;
+	private static int MAPYSIZE = 700;
 
 	private GPSPoint[] gpspoints;
 	private GPSComputer gpscomputer;
@@ -36,7 +36,7 @@ public class ShowRoute extends EasyGraphics {
 
 		showRouteMap(MARGIN + MAPYSIZE);
 
-		playRoute(MARGIN + MAPYSIZE);
+//		playRoute(MARGIN + MAPYSIZE);
 		
 		showStatistics();
 	}
@@ -55,12 +55,15 @@ public class ShowRoute extends EasyGraphics {
 	// antall y-pixels per breddegrad
 	public double ystep() {
 	
-		double ystep;
-		
 		// TODO - START
 		
-		throw new UnsupportedOperationException(TODO.method());
-
+		double maxlat = GPSUtils.findMax(GPSUtils.getLatitudes(gpspoints));
+		double minlat = GPSUtils.findMin(GPSUtils.getLatitudes(gpspoints));
+		
+		double ystep = MAPYSIZE / (Math.abs(maxlat - minlat));
+		
+		return ystep;
+		
 		// TODO - SLUTT
 		
 	}
@@ -69,7 +72,26 @@ public class ShowRoute extends EasyGraphics {
 
 		// TODO - START
 		
-		throw new UnsupportedOperationException(TODO.method());
+		double minlong = GPSUtils.findMin(GPSUtils.getLongitudes(gpspoints));
+		double minlat = GPSUtils.findMin(GPSUtils.getLatitudes(gpspoints));
+		
+		setColor(0, 255, 0);
+		int prevx = 0;
+		int prevy = 0;
+		
+		for (int i = 0; i < gpspoints.length; i++) {
+			int x = MARGIN + (int) ((gpspoints[i].getLongitude() - minlong) * xstep());
+			int y = ybase - (int) ((gpspoints[i].getLatitude() - minlat) * ystep());
+			fillCircle(x, y, 3);
+			
+			if (i > 0) {
+				drawLine(prevx, prevy, x, y);
+			}
+			
+			prevx = x;
+			prevy = y;
+			
+		}
 		
 		// TODO - SLUTT
 	}
@@ -83,7 +105,12 @@ public class ShowRoute extends EasyGraphics {
 		
 		// TODO - START
 		
-		throw new UnsupportedOperationException(TODO.method());
+		drawString("Total time     :" + GPSUtils.formatTime(gpscomputer.totalTime()), MARGIN, 10);
+		drawString("Total distance :" + GPSUtils.formatDouble(gpscomputer.totalDistance() / 1000) + " km", MARGIN, 10 + TEXTDISTANCE);
+		drawString("Total elevation:" + GPSUtils.formatDouble(gpscomputer.totalElevation()) + " m", MARGIN, 10 + 2 * TEXTDISTANCE);
+		drawString("Max speed      :" + GPSUtils.formatDouble(gpscomputer.maxSpeed()) + " km/t", MARGIN, 10 + 3 * TEXTDISTANCE);
+		drawString("Average speed  :" + GPSUtils.formatDouble(gpscomputer.averageSpeed()) + " km/t", MARGIN, 10 + 4 * TEXTDISTANCE);
+		drawString("Energy         :" + GPSUtils.formatDouble(gpscomputer.totalKcal(80)) + " kcal", MARGIN, 10 + 5 * TEXTDISTANCE);
 		
 		// TODO - SLUTT;
 	}
